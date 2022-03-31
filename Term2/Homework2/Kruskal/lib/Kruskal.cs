@@ -1,4 +1,7 @@
 ﻿namespace Kruskal;
+
+using System.Collections.Generic;
+
 public class Kruskal
 {
 	private List<Edge>[] graph;
