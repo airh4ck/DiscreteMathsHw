@@ -17,11 +17,14 @@ public class DSU
 		}
 	}
 
-	public int GetParent(int v) {
+	public int GetParent(int v) 
+	{
+		// Console.Error.WriteLine(v + " " + parent[v]);
+
 		if (parent[v] == v) 
 			return v;
 		
-		return parent[v] = GetParent(v);
+		return parent[v] = GetParent(parent[v]);
 	}
 
 	public bool JoinSets(int v, int u) 
@@ -45,7 +48,7 @@ public class DSU
 
 		if (rank[u] == rank[v])
 		{
-			rank[v]++;
+			rank[u]++;
 		}
 		
 		return false;

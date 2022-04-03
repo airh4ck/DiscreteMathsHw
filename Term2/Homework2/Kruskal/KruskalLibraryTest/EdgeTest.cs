@@ -2,7 +2,7 @@ using NUnit.Framework;
 
 namespace KruskalLibraryTest;
 
-public class Tests
+public class EdgeTest
 {
     private Kruskal.Edge firstEdge;
     private Kruskal.Edge secondEdge;
