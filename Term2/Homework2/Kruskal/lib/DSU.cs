@@ -19,8 +19,6 @@ public class DSU
 
 	public int GetParent(int v) 
 	{
-		// Console.Error.WriteLine(v + " " + parent[v]);
-
 		if (parent[v] == v) 
 			return v;
 		

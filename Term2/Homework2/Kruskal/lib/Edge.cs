@@ -1,6 +1,6 @@
 namespace Kruskal;
 
-public class Edge 
+public class Edge : IComparable
 {
 	internal int From {get; init;}
 
@@ -15,8 +15,12 @@ public class Edge
 		this.Weight = weight;
 	}
 
-	public int CompareTo(Edge other) 
+	public int CompareTo(object? obj) 
 	{
+		if (obj is not Edge || obj == null)
+			return 0;
+		
+		Edge other = obj as Edge;
 		if (this.Weight == other.Weight)
 			return 0;
 		else if (this.Weight > other.Weight)

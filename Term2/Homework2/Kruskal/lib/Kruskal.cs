@@ -10,12 +10,19 @@ public class Kruskal
 
 	public Kruskal(int[,] graph)
 	{
-		n = graph.Length;
-		this.graph = new List<Edge>[graph.Length];
+		n = graph.GetLength(0);
+
+		if (n != graph.GetLength(1)) 
+		{
+			throw new ArgumentException("Graph should be given as a square matrix");
+		}
+
+		this.graph = new List<Edge>[n];
 		this.edgeList = new List<Edge>();
 
 		for (int i = 0; i < n; i++) 
 		{
+			this.graph[i] = new List<Edge>();
 			for (int j = 0; j < n; j++) 
 			{
 				if (graph[i, j] == -1)
@@ -41,5 +48,28 @@ public class Kruskal
 		}
 
 		return resultWeight;
+	}
+
+	public int[,] FindMST() 
+	{
+		int[,] result = new int[n, n];
+		for (int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < n; j++)
+			{
+				result[i, j] = -1;
+			}
+		}
+
+		DSU dsu = new DSU(n);
+
+		edgeList.Sort();
+
+		foreach (var edge in edgeList) 
+		{
+			if (!dsu.JoinSets(edge.From, edge.To))
+				result[edge.From, edge.To] = result[edge.To, edge.From] = edge.Weight;
+		}
+		return result;
 	}
 }
