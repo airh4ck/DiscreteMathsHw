@@ -1,4 +1,0 @@
-rootProject.name = 'Prim'
-include 'PrimTrivial'
-include 'PrimFast'
-
