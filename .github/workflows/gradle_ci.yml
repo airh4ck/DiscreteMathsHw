@@ -9,6 +9,8 @@ name: Java CI with Gradle
 
 on:
   push:
+    paths:
+      - Homework*/
     branches-ignore: [ master ]
   pull_request:
     branches: [ master ]
