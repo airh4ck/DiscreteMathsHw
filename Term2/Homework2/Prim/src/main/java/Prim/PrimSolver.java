@@ -1,10 +1,12 @@
+package Prim;
+
 import java.util.Arrays;
 
 public class PrimSolver {
 	private static final int INF = 1_000_000_000 + 23;
 	private static final int START_VERTICE = 0;
 
-	private int verticesCount;
+	protected int verticesCount;
 	protected int[][] graph;
 
 	public PrimSolver(int[][] graph) {
@@ -18,7 +20,7 @@ public class PrimSolver {
 		}
 	}
 
-	private int[][] createEmptyGraph(int vertices) {
+	protected int[][] createEmptyGraph(int vertices) {
 		int[][] graph = new int[vertices][vertices];
 		for (int i = 0; i < vertices; i++) {
 			for (int j = 0; j < vertices; j++)
@@ -51,7 +53,7 @@ public class PrimSolver {
 			}
 
 			used[currentVertice] = true;
-			if (i > 0) {
+			if (parent[currentVertice] != -1) {
 				mstGraph[parent[currentVertice]][currentVertice] = graph[parent[currentVertice]][currentVertice];
 				mstGraph[currentVertice][parent[currentVertice]] = graph[currentVertice][parent[currentVertice]];
 			}
