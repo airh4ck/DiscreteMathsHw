@@ -1,4 +1,4 @@
-package EdmondsKarp;
+package Dinitz;
 
 import utils.Edge;
 
@@ -7,17 +7,23 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class EdmondsKarp {
+public class Dinitz {
 	private static final int INF = 1_000_000_000 + 23;
 
+	private int[] distance;
+	private int[] used;
 	private int verticesCount;
 	private ArrayList<Integer>[] graph;
 	private ArrayList<Edge> edgeList;
+	private int timer;
 
-	public EdmondsKarp(ArrayList<Edge>[] graph) {
+	public Dinitz(ArrayList<Edge>[] graph) {
 		this.verticesCount = graph.length;
+		this.used = new int[verticesCount];
+		this.distance = new int[verticesCount];
 		this.graph = (ArrayList<Integer>[]) new ArrayList[verticesCount];
 		this.edgeList = new ArrayList<>();
+		this.timer = 1;
 
 		for (int i = 0; i < verticesCount; i++) {
 			this.graph[i] = new ArrayList<>();
@@ -34,10 +40,7 @@ public class EdmondsKarp {
 	}
 
 	private boolean bfs(int s, int t) {
-		int[] distance = new int[verticesCount];
-		int[] parent = new int[verticesCount];
 		Arrays.fill(distance, INF);
-		Arrays.fill(parent, -1);
 		distance[0] = 0;
 		Queue<Integer> queue = new LinkedList<>();
 		queue.add(s);
@@ -54,39 +57,50 @@ public class EdmondsKarp {
 				if (distance[currentEdge.to()] > distance[currentVertice] + 1) {
 					distance[currentEdge.to()] = distance[currentVertice] + 1;
 					queue.add(currentEdge.to());
-					parent[currentEdge.to()] = index;
 				}
 			}
 		}
 
-		if (distance[t] == INF)
-			return false;
+		return distance[t] != INF;
+	}
 
-		int currentVertice = t;
-		int minimumResidualCapacity = INF;
-		while (parent[currentVertice] != -1) {
-			minimumResidualCapacity = Math.min(
-					minimumResidualCapacity,
-					edgeList.get(parent[currentVertice]).capacity() - edgeList.get(parent[currentVertice]).flow()
-			);
-			currentVertice = edgeList.get(parent[currentVertice]).from();
+	private int dfs(int v, int t, int delta) {
+		if (used[v] == timer)
+			return 0;
+
+		if (v == t) {
+			return delta;
 		}
 
-		currentVertice = t;
-		while (parent[currentVertice] != -1) {
-			var currentEdge = edgeList.get(parent[currentVertice]);
-			var reverseEdge = edgeList.get(parent[currentVertice] ^ 1);
-			edgeList.set(parent[currentVertice], new Edge(currentEdge.from(), currentEdge.to(), currentEdge.capacity(), currentEdge.flow() + minimumResidualCapacity));
-			edgeList.set(parent[currentVertice] ^ 1, new Edge(reverseEdge.from(), reverseEdge.to(), reverseEdge.capacity(), reverseEdge.flow() - minimumResidualCapacity));
+		used[v] = timer;
+		for (int index : graph[v]) {
+			var currentEdge = edgeList.get(index);
+			if (
+					currentEdge.capacity() == 0 ||
+					currentEdge.flow() >= currentEdge.capacity() ||
+					distance[currentEdge.to()] != distance[v] + 1
+			)
+				continue;
 
-			currentVertice = edgeList.get(parent[currentVertice]).from();
+			int newDelta = dfs(currentEdge.to(), t, Math.min(delta, currentEdge.capacity() - currentEdge.flow()));
+
+			if (newDelta > 0) {
+				edgeList.set(index, new Edge(currentEdge.from(), currentEdge.to(), currentEdge.capacity(), currentEdge.flow() + newDelta));
+				var reverseEdge = edgeList.get(index ^ 1);
+				edgeList.set(index ^ 1, new Edge(reverseEdge.to(), reverseEdge.from(), reverseEdge.capacity(), reverseEdge.flow() - newDelta));
+
+				return newDelta;
+			}
 		}
 
-		return true;
+		return 0;
 	}
 
 	public int findMaxFlow(int s, int t) {
-		while (bfs(s, t)) {}
+		while (bfs(s, t)) {
+			dfs(s, t, INF);
+			timer++;
+		}
 
 		int result = 0;
 		for (var index : graph[s])
