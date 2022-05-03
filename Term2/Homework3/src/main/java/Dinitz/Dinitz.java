@@ -87,7 +87,7 @@ public class Dinitz {
 			if (newDelta > 0) {
 				edgeList.set(index, new Edge(currentEdge.from(), currentEdge.to(), currentEdge.capacity(), currentEdge.flow() + newDelta));
 				var reverseEdge = edgeList.get(index ^ 1);
-				edgeList.set(index ^ 1, new Edge(reverseEdge.to(), reverseEdge.from(), reverseEdge.capacity(), reverseEdge.flow() - newDelta));
+				edgeList.set(index ^ 1, new Edge(reverseEdge.from(), reverseEdge.to(), reverseEdge.capacity(), reverseEdge.flow() - newDelta));
 
 				return newDelta;
 			}

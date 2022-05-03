@@ -1,10 +1,10 @@
-package FordFulkerson;
-
-import java.util.ArrayList;
+package CapacityScaling;
 
 import utils.Edge;
 
-public class FordFulkerson {
+import java.util.ArrayList;
+
+public class CapacityScaling {
 	private static final int INF = 1_000_000_000 + 23;
 
 	private int[] used;
@@ -13,7 +13,7 @@ public class FordFulkerson {
 	private ArrayList<Edge> edgeList;
 	private int timer;
 
-	public FordFulkerson(ArrayList<Edge>[] graph) {
+	public CapacityScaling(ArrayList<Edge>[] graph) {
 		this.verticesCount = graph.length;
 		this.used = new int[verticesCount];
 		this.graph = (ArrayList<Integer>[]) new ArrayList[verticesCount];
@@ -34,7 +34,7 @@ public class FordFulkerson {
 		}
 	}
 
-	private int dfs(int v, int t, int delta) {
+	private int dfs(int v, int t, int delta, int scale) {
 		if (used[v] == timer)
 			return 0;
 
@@ -45,10 +45,13 @@ public class FordFulkerson {
 		used[v] = timer;
 		for (int index : graph[v]) {
 			var currentEdge = edgeList.get(index);
-			if (currentEdge.capacity() == 0 || currentEdge.flow() >= currentEdge.capacity())
+			if (
+					currentEdge.capacity() - currentEdge.flow() == 0 ||
+					Math.abs(currentEdge.capacity() - currentEdge.flow()) < scale
+			)
 				continue;
 
-			int newDelta = dfs(currentEdge.to(), t, Math.min(delta, currentEdge.capacity() - currentEdge.flow()));
+			int newDelta = dfs(currentEdge.to(), t, Math.min(delta, currentEdge.capacity() - currentEdge.flow()), scale);
 
 			if (newDelta > 0) {
 				edgeList.set(index, new Edge(currentEdge.from(), currentEdge.to(), currentEdge.capacity(), currentEdge.flow() + newDelta));
@@ -58,13 +61,27 @@ public class FordFulkerson {
 				return newDelta;
 			}
 		}
-
 		return 0;
 	}
 
+	private int getMaxCapacity() {
+		var result = 0;
+		for (var edge : edgeList)
+			result = Math.max(result, edge.capacity());
+		return result;
+	}
+
 	public int findMaxFlow(int s, int t) {
-		while (dfs(s, t, INF) != 0)
-			timer++;
+		int maxCapacity = getMaxCapacity();
+
+		int k = 1;
+		while ((k << 1) <= maxCapacity)
+			k <<= 1;
+
+		for (; k > 0; k >>= 1, timer++) {
+			while (dfs(s, t, INF, k) != 0)
+				timer++;
+		}
 
 		int result = 0;
 		for (var index : graph[s])
