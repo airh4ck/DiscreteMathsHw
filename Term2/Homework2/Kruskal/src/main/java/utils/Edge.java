@@ -23,6 +23,10 @@ public class Edge implements Comparable {
 		return weight;
 	}
 
+	public Edge getReverseEdge() {
+		return new Edge(this.to, this.from, this.weight);
+	}
+
 	@Override
 	public int compareTo(Object o) {
 		if (o instanceof Edge || o == null) {
@@ -31,5 +35,14 @@ public class Edge implements Comparable {
 		}
 
 		return 0;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Edge other) {
+			return this.from == other.from && this.to == other.to && this.weight == other.weight;
+		}
+
+		return false;
 	}
 }

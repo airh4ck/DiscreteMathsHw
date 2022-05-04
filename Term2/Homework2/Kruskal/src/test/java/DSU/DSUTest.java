@@ -51,8 +51,4 @@ class DSUTest {
 	void joinJointSetsExpectTrue() {
 		assertTrue(dsu.joinSets(0, 0));
 	}
-
-	@Test
-	void joinSets() {
-	}
 }

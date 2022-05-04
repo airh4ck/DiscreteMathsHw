@@ -15,12 +15,16 @@ public class Kruskal {
 		n = graph.length;
 		this.graph = graph;
 		this.edgeList = new ArrayList<>();
+
+		for (var vertice : graph) {
+			edgeList.addAll(vertice);
+		}
 	}
 
 	private ArrayList<Edge>[] createEmptyGraph(int n) {
 		ArrayList<Edge>[] result = (ArrayList<Edge>[]) new ArrayList[n];
-		for (var row : result)
-			row = new ArrayList<>();
+		for (int i = 0; i < n; i++)
+			result[i] = new ArrayList<>();
 
 		return result;
 	}
@@ -34,16 +38,16 @@ public class Kruskal {
 		return true;
 	}
 
-	public ArrayList<Edge>[] findMST() {
+	public ArrayList<Edge>[] getMST() {
 		DSU dsu = new DSU(n);
 
-		ArrayList<Edge>[] mstGraph = createEmptyGraph(n);
+		var mstGraph = createEmptyGraph(n);
 
 		edgeList.sort(Edge::compareTo);
 		for (var edge : edgeList) {
 			if (!dsu.joinSets(edge.getFrom(), edge.getTo())) {
 				mstGraph[edge.getFrom()].add(edge);
-				mstGraph[edge.getTo()].add(edge);
+				mstGraph[edge.getTo()].add(edge.getReverseEdge());
 			}
 		}
 
@@ -54,8 +58,8 @@ public class Kruskal {
 		return mstGraph;
 	}
 
-	public int findMSTWeight() {
-		var mstGraph = findMST();
+	public int getMSTWeight() {
+		var mstGraph = getMST();
 		int resultWeight = 0;
 
 		for (var vertice : mstGraph) {
