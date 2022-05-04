@@ -11,24 +11,10 @@ public class Kruskal {
 	protected ArrayList<Edge> edgeList;
 	private int n;
 
-	public Kruskal(int[][] graph) {
+	public Kruskal(ArrayList<Edge>[] graph) {
 		n = graph.length;
-		this.graph = (ArrayList<Edge>[]) new ArrayList[n];
+		this.graph = graph;
 		this.edgeList = new ArrayList<>();
-
-		for (int i = 0; i < n; i++) {
-			if (graph[i].length != n)
-				throw new IllegalArgumentException("Graph must be given in a form of adjacency matrix");
-
-			this.graph[i] = new ArrayList<>();
-			for (int j = 0; j < n; j++) {
-				if (graph[i][j] == -1)
-					continue;
-
-				this.edgeList.add(new Edge(i, j, graph[i][j]));
-				this.graph[i].add(new Edge(i, j, graph[i][j]));
-			}
-		}
 	}
 
 	private ArrayList<Edge>[] createEmptyGraph(int n) {

@@ -1,5 +1,8 @@
 package Prim;
 
+import utils.Edge;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class PrimSolver {
@@ -7,38 +10,29 @@ public class PrimSolver {
 	private static final int START_VERTICE = 0;
 
 	protected int verticesCount;
-	protected int[][] graph;
+	protected ArrayList<Edge>[] graph;
 
-	public PrimSolver(int[][] graph) {
+	public PrimSolver(ArrayList<Edge>[] graph) {
 		this.graph = graph;
 		this.verticesCount = graph.length;
-
-		for (var row : graph) {
-			if (row.length != verticesCount) {
-				throw new IllegalArgumentException("Graph should be given as an adjacency matrix");
-			}
-		}
 	}
 
-	protected int[][] createEmptyGraph(int vertices) {
-		int[][] graph = new int[vertices][vertices];
-		for (int i = 0; i < vertices; i++) {
-			for (int j = 0; j < vertices; j++)
-				graph[i][j] = -1;
-		}
-
-		return graph;
+	protected ArrayList<Edge>[] createEmptyGraph(int vertices) {
+		ArrayList<Edge>[] result = new ArrayList[vertices];
+		for (int i = 0; i < vertices; i++)
+			result[i] = new ArrayList<>();
+		return result;
 	}
 
-	public int[][] getMST() {
+	public ArrayList<Edge>[] getMST() {
 		boolean used[] = new boolean[verticesCount];
 		int minDistance[] = new int[verticesCount];
-		int parent[] = new int[verticesCount];
+		Edge parent[] = new Edge[verticesCount];
 		Arrays.fill(minDistance, INF);
-		Arrays.fill(parent, -1);
+		Arrays.fill(parent, new Edge(-1, -1, -1));
 		minDistance[START_VERTICE] = 0;
 
-		int[][] mstGraph = createEmptyGraph(verticesCount);
+		var mstGraph = createEmptyGraph(verticesCount);
 
 		for (int i = 0; i < verticesCount; i++) {
 			int currentVertice = -1;
@@ -53,14 +47,20 @@ public class PrimSolver {
 			}
 
 			used[currentVertice] = true;
-			if (parent[currentVertice] != -1) {
-				mstGraph[parent[currentVertice]][currentVertice] = graph[parent[currentVertice]][currentVertice];
-				mstGraph[currentVertice][parent[currentVertice]] = graph[currentVertice][parent[currentVertice]];
+			if (parent[currentVertice].getFrom() != -1) {
+				mstGraph[parent[currentVertice].getFrom()].add(parent[currentVertice]);
+				mstGraph[currentVertice].add(
+						new Edge(
+								parent[currentVertice].getTo(),
+								parent[currentVertice].getFrom(),
+								parent[currentVertice].getWeight()
+						)
+				);
 			}
-			for (int j = 0; j < verticesCount; j++) {
-				if (graph[currentVertice][j] != -1 && graph[currentVertice][j] < minDistance[j]) {
-					minDistance[j] = graph[currentVertice][j];
-					parent[j] = currentVertice;
+			for (var edge : graph[currentVertice]) {
+				if (edge.getWeight() < minDistance[edge.getTo()]) {
+					minDistance[edge.getTo()] = edge.getWeight();
+					parent[edge.getTo()] = edge;
 				}
 			}
 		}
@@ -72,10 +72,8 @@ public class PrimSolver {
 		var mstGraph = getMST();
 		int mstWeight = 0;
 		for (int i = 0; i < verticesCount; i++) {
-			for (int j = 0; j < verticesCount; j++) {
-				if (mstGraph[i][j] != -1)
-					mstWeight += mstGraph[i][j];
-			}
+			for (var edge : mstGraph[i])
+				mstWeight += edge.getWeight();
 		}
 
 		return mstWeight / 2;
