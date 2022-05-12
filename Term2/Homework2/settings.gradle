@@ -1,0 +1,5 @@
+rootProject.name = "Homework2"
+include 'Dijkstra'
+include 'Prim'
+include 'Kruskal'
+
