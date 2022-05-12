@@ -45,7 +45,7 @@ public class FordFulkerson {
 		used[v] = timer;
 		for (int index : graph[v]) {
 			var currentEdge = edgeList.get(index);
-			if (currentEdge.capacity() == 0 || currentEdge.flow() >= currentEdge.capacity())
+			if (currentEdge.flow() >= currentEdge.capacity())
 				continue;
 
 			int newDelta = dfs(currentEdge.to(), t, Math.min(delta, currentEdge.capacity() - currentEdge.flow()));
