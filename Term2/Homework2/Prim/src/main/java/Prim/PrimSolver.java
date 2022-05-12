@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class PrimSolver {
-	private static final int INF = 1_000_000_000 + 23;
+	private static final int INF = Integer.MAX_VALUE;
 	private static final int START_VERTICE = 0;
 
 	protected int verticesCount;

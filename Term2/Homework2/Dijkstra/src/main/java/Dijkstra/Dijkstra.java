@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class Dijkstra {
-	private static final int INF = 1_000_000_000 + 23;
+	private static final int INF = Integer.MAX_VALUE;
 
 	private int[] parent;
 	private int[] distance;

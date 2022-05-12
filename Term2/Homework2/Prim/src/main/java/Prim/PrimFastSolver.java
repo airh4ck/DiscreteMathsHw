@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.PriorityQueue;
 
 public class PrimFastSolver extends PrimSolver {
-	private static final int INF = 1_000_000_000 + 23;
+	private static final int INF = Integer.MAX_VALUE;
 	private static final int START_VERTICE = 0;
 
 	public PrimFastSolver(ArrayList<Edge>[] graph) {
