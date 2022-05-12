@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import utils.Edge;
 
 public class FordFulkerson {
-	private static final int INF = 1_000_000_000 + 23;
+	private static final int INF = Integer.MAX_VALUE;
 
 	private int[] used;
 	private int verticesCount;

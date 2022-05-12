@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class Dinitz {
-	private static final int INF = 1_000_000_000 + 23;
+	private static final int INF = Integer.MAX_VALUE;
 
 	private int[] distance;
 	private int[] used;
